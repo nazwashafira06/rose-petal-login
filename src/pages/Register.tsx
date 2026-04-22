@@ -1,15 +1,10 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Mail, Lock, User, Eye, EyeOff, Loader2 } from "lucide-react";
 import { useAuth } from "@/lib/mockAuth";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/register")({
-  head: () => ({ meta: [{ title: "Create account — Rosé" }, { name: "description", content: "Join Rosé." }] }),
-  component: RegisterPage,
-});
-
-function RegisterPage() {
+export default function RegisterPage() {
   const navigate = useNavigate();
   const { user, register, loading } = useAuth();
   const [fullName, setFullName] = useState("");
@@ -21,7 +16,8 @@ function RegisterPage() {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    if (!loading && user) navigate({ to: "/landing" });
+    document.title = "Create account — Rosé";
+    if (!loading && user) navigate("/landing");
   }, [user, loading, navigate]);
 
   const validate = () => {
@@ -44,7 +40,7 @@ function RegisterPage() {
     try {
       await register(fullName.trim(), email, password);
       toast.success("Account created — please sign in 🌹");
-      navigate({ to: "/login" });
+      navigate("/login");
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Something went wrong";
       setErrors({ form: msg });
@@ -58,9 +54,7 @@ function RegisterPage() {
       <div className="w-full max-w-md animate-fade-up">
         <div className="mb-8 text-center">
           <h1 className="font-display text-5xl font-bold text-maroon">Rosé</h1>
-          <p className="mt-2 text-sm tracking-wide" style={{ color: "#B66B7A" }}>
-            Begin your romance
-          </p>
+          <p className="mt-2 text-sm tracking-wide" style={{ color: "#B66B7A" }}>Begin your romance</p>
         </div>
 
         <div className="glass-card border-rose-gold shadow-romantic rounded-2xl border p-8 sm:p-10">
@@ -88,11 +82,8 @@ function RegisterPage() {
               </div>
             )}
 
-            <button
-              type="submit"
-              disabled={submitting}
-              className="bg-maroon hover:bg-deep-rose flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm font-medium tracking-wide text-white shadow-petal transition-all duration-300 hover:shadow-romantic disabled:opacity-60"
-            >
+            <button type="submit" disabled={submitting}
+              className="bg-maroon hover:bg-deep-rose flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm font-medium tracking-wide text-white shadow-petal transition-all duration-300 hover:shadow-romantic disabled:opacity-60">
               {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
               {submitting ? "Creating…" : "Create account"}
             </button>

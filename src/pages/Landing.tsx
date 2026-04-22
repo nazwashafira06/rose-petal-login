@@ -1,26 +1,22 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { LogOut, Sparkles } from "lucide-react";
 import { useAuth } from "@/lib/mockAuth";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/landing")({
-  head: () => ({ meta: [{ title: "Welcome — Rosé" }, { name: "description", content: "Your romantic dashboard." }] }),
-  component: LandingPage,
-});
-
-function LandingPage() {
+export default function LandingPage() {
   const navigate = useNavigate();
   const { user, loading, logout } = useAuth();
 
   useEffect(() => {
-    if (!loading && !user) navigate({ to: "/login" });
+    document.title = "Welcome — Rosé";
+    if (!loading && !user) navigate("/login");
   }, [user, loading, navigate]);
 
   const onLogout = () => {
     logout();
     toast.success("Signed out — see you soon 🌹");
-    navigate({ to: "/login" });
+    navigate("/login");
   };
 
   if (!user) return null;
@@ -30,10 +26,8 @@ function LandingPage() {
     <main className="relative min-h-screen">
       <header className="flex items-center justify-between px-6 py-5 sm:px-10">
         <div className="font-display text-2xl font-bold text-maroon">Rosé</div>
-        <button
-          onClick={onLogout}
-          className="flex items-center gap-2 rounded-full border border-rose-gold bg-white/70 px-4 py-2 text-sm font-medium text-maroon backdrop-blur transition-all hover:bg-maroon hover:text-white"
-        >
+        <button onClick={onLogout}
+          className="flex items-center gap-2 rounded-full border border-rose-gold bg-white/70 px-4 py-2 text-sm font-medium text-maroon backdrop-blur transition-all hover:bg-maroon hover:text-white">
           <LogOut className="h-4 w-4" />
           <span>Logout</span>
         </button>
